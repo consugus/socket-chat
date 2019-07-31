@@ -16,38 +16,43 @@ var usuario = {
 socket.on('connect', function() {
     console.log('Conectado al servidor');
     socket.emit( 'entrarAlChat',  usuario , function(resp){
-        console.log("Usuarios conectados", resp);
+        // console.log("Usuarios conectados", resp);
+        renderUsers(resp);
     });
 });
 
 // escuchar
 socket.on('disconnect', function() {
-
     console.log('Perdimos conexión con el servidor');
-
-});
-
-socket.on("crearMensaje", function(data){
-    console.log(data);
-});
-
-socket.on("listaPersonas", function(conectados){
-    console.log(conectados);
 });
 
 
-// Enviar información
-let mensaje = { usuario: 'Fernando', mensaje: 'Hola Mundo' };
-socket.emit('crearMensaje', mensaje, function(resp) {
-    console.log('respuesta server: ', resp);
-});
 
 // Escuchar información
-socket.on('enviarMensaje', function(mensaje) {
-
-    console.log('Servidor:', mensaje);
-
+socket.on("crearMensaje", function(mensaje){
+    console.log('Servidor: ', mensaje);
+    renderMessages(mensaje, false);
+    scrollBottom();
 });
+
+// Escuchar cambios de usuarios cuando uno entra o sale del chat
+socket.on("listaPersonas", function(conectados){
+    // console.log(conectados);
+    renderUsers(conectados);
+});
+
+// Enviar información
+// let mensaje = {
+//     usuario: 'Fernando',
+//     mensaje: 'Hola Mundo'
+// };
+// socket.emit('crearMensaje', mensaje, function(resp) {
+//     console.log('respuesta server: ', resp);
+// });
+
+// socket.on('enviarMensaje', function(mensaje) {
+//     console.log('Servidor:', mensaje);
+// });
 
 
 //Mensaje Privado
